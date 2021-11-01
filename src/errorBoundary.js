@@ -29,6 +29,7 @@ export default class ErrorBoundary extends Component {
                 <h1>{this.state.message}</h1>
                 <p>It cannot be searched</p>
                 <img alt="Unsearchable cat" src= "https://robohash.org/1?set=set4&100x100"/>
+                <br/><a href="/">Refresh</a>
               </Fragment>
           
           );
