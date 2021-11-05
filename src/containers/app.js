@@ -3,10 +3,23 @@ import CardList from "../components/cardlist";
 import SearchBox from "../components/SearchBox";
 import Scroll from "../components/scroll";
 import ErrorBoundary from "../errorBoundary";
+import { connect } from 'react-redux';
+import { setSearchField } from "../actions/actions";
 
-export default function App() {
+
+
+let mapStateToProps = state => ({
+  searchField: state.searchField
+});
+
+let mapDispatchToProps = dispatch => ({
+  onSearchChange: event => dispatch(setSearchField(event.target.value))
+});
+
+
+function App(props) {
    const [cats, setCats] = useState([]);
-   const [searchtext, setSearchText] = useState('');
+   const {searchField, onSearchChange} = props;
 
    useEffect(() => {
     fetch("https://jsonplaceholder.cypress.io/todos/")
@@ -19,12 +32,8 @@ export default function App() {
    },[])
 
 
-  const onSearchChange = (event) => {
-    setSearchText(event.target.value);
-  };
-
   let filteredCats = cats.filter((r) =>
-    r.title.toLowerCase().includes(searchtext.toLowerCase())
+    r.title.toLowerCase().includes(searchField.toLowerCase())
   );
 
   if (cats.length === undefined) return <div>Loading</div>;
@@ -39,3 +48,4 @@ export default function App() {
     </div>
   );
 }
+export default connect(mapStateToProps, mapDispatchToProps)(App)
