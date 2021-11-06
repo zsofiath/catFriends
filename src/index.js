@@ -5,10 +5,12 @@ import reportWebVitals from './reportWebVitals';
 import App from './containers/app';
 import 'tachyons';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 import { searchCat } from './reducers/reducers';
+import { createLogger } from 'redux-logger';
 
-const store = createStore(searchCat);
+const logger = createLogger();
+const store = createStore(searchCat, applyMiddleware(logger));
 ReactDOM.render(
   <Provider store={store}>
     <App/>
