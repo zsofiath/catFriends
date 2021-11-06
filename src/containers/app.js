@@ -4,31 +4,28 @@ import SearchBox from "../components/SearchBox";
 import Scroll from "../components/scroll";
 import ErrorBoundary from "../errorBoundary";
 import { connect } from 'react-redux';
-import { setSearchField } from "../actions/actions";
+import { requestCats, setSearchField } from "../actions/actions";
 
 
 
 let mapStateToProps = state => ({
-  searchField: state.searchField
+  searchField: state.searchCat.searchField,
+  cats: state.requestCats.cats,
+  isPending: state.requestCats.isPending,
+  error: state.requestCats.error
 });
 
 let mapDispatchToProps = dispatch => ({
-  onSearchChange: event => dispatch(setSearchField(event.target.value))
+  onSearchChange: event => dispatch(setSearchField(event.target.value)),
+  onRequestCats: () => dispatch(requestCats())
 });
 
 
 function App(props) {
-   const [cats, setCats] = useState([]);
-   const {searchField, onSearchChange} = props;
+   const {searchField, onSearchChange, cats, isPending, error, onRequestCats} = props;
 
    useEffect(() => {
-    fetch("https://jsonplaceholder.cypress.io/todos/")
-    .then((response) => response.json())
-    .then((json) => {
-      setCats(json);
-    });
-     return () => {
-     }
+    onRequestCats();
    },[])
 
 
@@ -36,7 +33,8 @@ function App(props) {
     r.title.toLowerCase().includes(searchField.toLowerCase())
   );
 
-  if (cats.length === undefined) return <div>Loading</div>;
+  if (error) return <div>{error}</div>;
+  if (isPending) return <div>Loading</div>;
   return (
     <div className="tc">
       <SearchBox searchChange={onSearchChange} />

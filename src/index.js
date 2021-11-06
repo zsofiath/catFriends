@@ -5,12 +5,14 @@ import reportWebVitals from './reportWebVitals';
 import App from './containers/app';
 import 'tachyons';
 import { Provider } from 'react-redux';
-import { applyMiddleware, createStore } from 'redux';
-import { searchCat } from './reducers/reducers';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { searchCat, requestCats } from './reducers/reducers';
 import { createLogger } from 'redux-logger';
+import thunkMiddleWare from 'redux-thunk';
 
 const logger = createLogger();
-const store = createStore(searchCat, applyMiddleware(logger));
+const rootReducer = combineReducers({searchCat, requestCats})
+const store = createStore(rootReducer, applyMiddleware(thunkMiddleWare, logger));
 ReactDOM.render(
   <Provider store={store}>
     <App/>
